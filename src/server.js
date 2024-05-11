@@ -16,24 +16,31 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-
-
 // 연결 정보 저장 moc db
 const sockets = []
 
 wss.on("connection", (socket) => {
-    // socket에서 누가 연결했는지 연결 정보확인
-    // console.log(socket);
     sockets.push(socket);
+    // 익명(Anonymous)의 닉네임으로 초기화
+    socket["nickname"] = "Anon";
     console.log("Connected to Browser ✅");
     socket.on("close", () => console.log("Disconnected from the Browser ❌"));
 
-    // 서로 다른 브라우저에서 메세지를 주고 받지 못함
-    // socket.on("message", (message) => socket.send(message.toString()));
+    socket.on("message", (msg) => {
+        // string을 javascript object로 변환
+        const message = JSON.parse(msg);
+        // console.log(message, msg.toString());  // { type: 'nickname', payload: 'chrome' } {"type":"nickname","payload":"chrome"}
 
-    socket.on("message", (message) => {
-        // 연결된 각각의 서로 다른 브라우저에 대한 메세지가 전송됨
-        sockets.forEach(aSocket => aSocket.send(message.toString()))
+        switch (message.type) {
+            case "new_message":
+                sockets.forEach(aSocket => aSocket.send(`${socket.nickname}: ${message.payload.toString()}`))
+                break;
+            case "nickname":
+                socket["nickname"] = message.payload;
+                break;
+            default:
+                break;
+        }
     });
 });
 
