@@ -19,20 +19,10 @@ const wsServer = SocketIO(httpServer);
 // 1. connection 받을 준비
 wsServer.on("connection", socket => {
     socket.on("enter_room", (roomName, done) => {
-        socket.onAny(event => console.log(`Socket Event: ${event}`));
-
-        console.log(`socket.id : ${socket.id}`);
-        // socket.id : HIFnHbEtqyY4o-G7AAAC
-        console.log(`socket.rooms :`, socket.rooms);
-        // socket.rooms : Set(1) { 'HIFnHbEtqyY4o-G7AAAC' }
-
+        // 2. room에 참가
         socket.join(roomName);
-        console.log(`socket.rooms :`, socket.rooms);
-        // socket.rooms : Set(2) { 'HIFnHbEtqyY4o-G7AAAC', 'aaa' }
-
-        setTimeout(() => {
-            done("hello from the backend");
-        }, 15000);
+        // 3. front-end fn 실행
+        done();
     });
 });
 
