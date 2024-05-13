@@ -1,5 +1,5 @@
 import http from "http";
-import WebSocket from "ws";
+import SocketIO from "socket.io";
 import express from "express";
 
 const app = express();
@@ -13,23 +13,40 @@ app.get("/*", (_, res) => res.redirect("/"));
 
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 
-const server = http.createServer(app);
+const httpServer = http.createServer(app);
+const wsServer = SocketIO(httpServer);
+
+// 1. connection 받을 준비
+wsServer.on("connection", socket => {
+    socket.on("enter_room", (roomName, done) => {
+        socket.onAny(event => console.log(`Socket Event: ${event}`));
+
+        console.log(`socket.id : ${socket.id}`);
+        // socket.id : HIFnHbEtqyY4o-G7AAAC
+        console.log(`socket.rooms :`, socket.rooms);
+        // socket.rooms : Set(1) { 'HIFnHbEtqyY4o-G7AAAC' }
+
+        socket.join(roomName);
+        console.log(`socket.rooms :`, socket.rooms);
+        // socket.rooms : Set(2) { 'HIFnHbEtqyY4o-G7AAAC', 'aaa' }
+
+        setTimeout(() => {
+            done("hello from the backend");
+        }, 15000);
+    });
+});
+
+/** 
 const wss = new WebSocket.Server({ server });
-
-// 연결 정보 저장 moc db
-const sockets = []
-
+const sockets = [];
 wss.on("connection", (socket) => {
     sockets.push(socket);
-    // 익명(Anonymous)의 닉네임으로 초기화
     socket["nickname"] = "Anon";
     console.log("Connected to Browser ✅");
     socket.on("close", () => console.log("Disconnected from the Browser ❌"));
 
     socket.on("message", (msg) => {
-        // string을 javascript object로 변환
         const message = JSON.parse(msg);
-        // console.log(message, msg.toString());  // { type: 'nickname', payload: 'chrome' } {"type":"nickname","payload":"chrome"}
 
         switch (message.type) {
             case "new_message":
@@ -43,7 +60,9 @@ wss.on("connection", (socket) => {
         }
     });
 });
+*/
 
-server.listen(3000, handleListen);
+
+httpServer.listen(3000, handleListen);
 
 
