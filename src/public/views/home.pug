@@ -1,20 +1,20 @@
 doctype html
 html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Noom
-        //- 기본 css 적용
-        //-  https://andybrewer.github.io/mvp/
-        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
-    body 
-        header
-            h1 Noom
-        main 
-            div#myStream
-                //- playsinline : 모바일 브라우저가 필요로하는 property
-                video#myFace(autoplay, playsinline, width="400", height="400")
-                button#mute Mute
-                button#camera Turn Camera Off
-        script(src="/socket.io/socket.io.js") 
-        script(src="/public/js/app.js")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Noom
+    //- 기본 css 적용
+    //-  https://andybrewer.github.io/mvp/
+    link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+  body 
+    header
+      h1 Noom
+    main 
+      div#myStream
+        //- playsinline : 모바일 브라우저가 필요로하는 property
+        video#myFace(autoplay, playsinline, width="400", height="400")
+        button#mute Mute
+        button#camera Turn Camera Off
+    script(src="/socket.io/socket.io.js") 
+    script(src="/public/js/app.js")
