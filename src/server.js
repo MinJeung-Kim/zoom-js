@@ -25,6 +25,13 @@ wsServer.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('사용자가 연결을 끊었습니다');
     });
+
+    socket.on('join_room', (roomName, done) => {
+        socket.join(roomName);
+        done();
+        // 내가 참가한 이후 참가한 사람이 있다는 알림을 받음
+        socket.to(roomName).emit("welcome");
+    });
 });
 
 const handleListen = () => console.log(`http://localhost:3000에서 청취 중`);
