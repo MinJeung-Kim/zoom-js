@@ -22,16 +22,29 @@ const wsServer = new Server(httpServer); // Socket.IO 서버 인스턴스를 올
 
 wsServer.on('connection', (socket) => {
     console.log('사용자가 연결되었습니다');
+
+    socket.on('join_room', (roomName) => {
+        socket.join(roomName);
+        // 내가 참가한 이후 참가한 사람이 있다는 알림을 받음
+        socket.to(roomName).emit("welcome");
+    });
+
+    socket.on('offer', (offer, roomName) => {
+        socket.to(roomName).emit("offer", offer);
+    });
+
+    socket.on('answer', (answer, roomName) => {
+        socket.to(roomName).emit("answer", answer);
+    });
+
+    socket.on('ice', (ice, roomName) => {
+        socket.to(roomName).emit("ice", ice);
+    });
+
     socket.on('disconnect', () => {
         console.log('사용자가 연결을 끊었습니다');
     });
 
-    socket.on('join_room', (roomName, done) => {
-        socket.join(roomName);
-        done();
-        // 내가 참가한 이후 참가한 사람이 있다는 알림을 받음
-        socket.to(roomName).emit("welcome");
-    });
 });
 
 const handleListen = () => console.log(`http://localhost:3000에서 청취 중`);
