@@ -174,7 +174,20 @@ socket.on("ice", (ice) => {
 // RTC Code
 function makeConnection() {
     // P2P 연결 생성
-    myPeerConnection = new RTCPeerConnection();
+    myPeerConnection = new RTCPeerConnection({
+        iceServers: [
+            {
+                // google에서 무료로 제공해주는 테스트용 리스트
+                urls: [
+                    "stun:stun.l.google.com:19302",
+                    "stun:stun1.l.google.com:19302",
+                    "stun:stun2.l.google.com:19302",
+                    "stun:stun3.l.google.com:19302",
+                    "stun:stun4.l.google.com:19302",
+                ]
+            }
+        ]
+    });
     myPeerConnection.addEventListener("icecandidate", handleIce);
     myPeerConnection.addEventListener("addstream", handleAddStream);
     // 양쪽 브라우저의 stream(카메라와 마이크 정보)를 받아서 연결 
