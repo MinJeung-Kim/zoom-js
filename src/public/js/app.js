@@ -178,6 +178,7 @@ function makeConnection() {
         iceServers: [
             {
                 // google에서 무료로 제공해주는 테스트용 리스트
+                // 🌟실제 서비스에서는 직접 stun server 구현해야됨 
                 urls: [
                     "stun:stun.l.google.com:19302",
                     "stun:stun1.l.google.com:19302",
